@@ -11,18 +11,22 @@ Attribute VB_Exposed = False
 
 Public Columns As New Dictionary
 
-Public Category As String
-
 Public Id As Integer
 Public Name As String
-Public Price As Double
+Public PriceL As Double
+Public PriceB As Double
+Public FX As Double
 Public Cashier As Integer
+Public WT As Double
 Public Orangic As String
-Public USA As String
+Public Vendor As String
+Public Country As String
 Public Store As String
 
+Public Category As String
+Public RowNumber As String
 
-
+Public TESTPrice As Double
     ' ========================================================
     ' These Fields are not on the Worksheet
     ' ========================================================

@@ -18,13 +18,13 @@ Public Sub Apply()
     Dim row As RowInfo
     Dim rule As rule
     
-    For Each row In Rows
-
+    For Each row In Rows ' goes through all rows
+        
+        ' Test all rules against selected row
         For Each rule In Rules
-            TestRule row, rule
+            TestRule row, rule ' takes 1 row and apply 1 rule to it
         Next
         
-        Debug.Print row.Columns("Id") & "=" & row.Category
     Next
     
 End Sub
@@ -34,27 +34,37 @@ Sub TestRule(row As RowInfo, rule As rule)
     Dim ruleCol As RuleColumn
     Dim FoundMatch As Boolean
     FoundMatch = False
+    Dim SkipFor As Boolean
     
     'Debug.Print row.Columns("Name")
-    
+    Dim ruleCounter As Integer
+    ruleCounter = 0
     For Each ruleCol In rule.RuleColumns
-    
+        Debug.Print row.RowNumber
+        ruleCounter = ruleCounter + 1
+        
+        If SkipFor Then GoTo ContinueFor
         Select Case ruleCol.Operator
             Case "="
-                'Debug.Print ruleCol.Name & "=" & row.Columns(ruleCol.Name)
-                If row.Columns(ruleCol.Name) = ruleCol.value Then
-                    ' TODO: Refactor and test in all scenarios.
+                'Debug.Print ruleCol.Header & "=" & row.Columns(ruleCol.Header)
+                   If row.Columns(ruleCol.Header) = "Apples" Then
+                    Debug.Print "Apples"
+                   End If
+                   
+                If row.Columns(ruleCol.Header) = ruleCol.Value Then
+                    
+
+                    
                     If ruleCol.Link = "AND" Then
-                        'FoundMatch = FoundMatch And True
-                        If row.Columns(ruleCol.Name) = ruleCol.value Then
-                            Debug.Print Test
-                        End If
+                    
                     Else
+
                         FoundMatch = True
                     End If
                    
                 Else
                     FoundMatch = False
+                    SkipFor = True
                 End If
         
         End Select
@@ -62,7 +72,11 @@ Sub TestRule(row As RowInfo, rule As rule)
         If FoundMatch Then
             'Debug.Print "Match!"
             row.Category = rule.Category
+        Else
+            'row.Category = ""
         End If
+        
+ContinueFor:
     Next
     
 

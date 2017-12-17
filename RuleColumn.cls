@@ -8,11 +8,13 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 
-Public Name As String
+Public Header As String
 Public Operator As String
-Public value As String
-Public ColType As ColumnType
+Public Value As String
+'Public ColType As ColumnType
 Public Link As String
+Public ReturnValue As String
+Public ReturnID As String
 
 
 Enum ColumnType

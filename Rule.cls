@@ -10,4 +10,6 @@ Attribute VB_Exposed = False
 
 Public RuleColumns As New Collection
 Public Category As String
+Public RuleID As String
 
+Public Total As String

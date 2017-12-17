@@ -47,11 +47,12 @@ Function ReadAllRows() As Collection
         offset = 0
         
         For Each ColCell In colNames.Columns
-            row_info.Columns.Add ColCell.value, c.offset(0, offset)
+            row_info.Columns.Add ColCell.Value, c.offset(0, offset)
             'Debug.Print offset & ". " & ColCell & " - " & c.offset(0, offset)
             offset = offset + 1
+            
         Next
-
+        row_info.RowNumber = c.row
         Rows.Add row_info
         
         'Debug.Print c & " - " & c.offset(0, 1)
@@ -126,15 +127,31 @@ Function ReadAllRules() As Collection
     
     
     For Each c In r
-        If c.offset(0, 1) <> "" Then
-            Set ruleCol = New RuleColumn
+    Debug.Print c.Address
+    Debug.Print c.offset(0, 0)
+        If c.offset(0, 0) <> "" Then
+        If c <> "" Then Debug.Print "c is not empty"
             Set rule = New rule
-            ruleCol.Name = c
-            ruleCol.Operator = c.offset(0, 1)
-            ruleCol.value = c.offset(0, 2)
-            ruleCol.Link = c.offset(0, 3)
-            rule.RuleColumns.Add ruleCol
-            rule.Category = c.End(xlToRight)
+            
+            Dim OffsetCounter As Integer
+            OffsetCounter = 0
+            While c.offset(0, 6 + OffsetCounter) <> ""
+                Set ruleCol = New RuleColumn
+                ruleCol.ReturnID = c.offset(0, 0 + OffsetCounter)
+                ruleCol.Header = c.offset(0, 1 + OffsetCounter)
+                ruleCol.Operator = c.offset(0, 2 + OffsetCounter)
+                ruleCol.Value = c.offset(0, 3 + OffsetCounter)
+                ruleCol.Link = c.offset(0, 4 + OffsetCounter)
+                ruleCol.ReturnValue = c.offset(0, 5 + OffsetCounter)
+                rule.RuleColumns.Add ruleCol
+                
+                OffsetCounter = OffsetCounter + 4
+            Wend
+            
+            ' rule category can be first column for simplicity.
+            rule.Category = c.offset(0, 1 + OffsetCounter) 'c.End(xlToRight)
+            rule.RuleID = c.End(xlToLeft)
+            rule.Category = rule.Category + rule.RuleID
             'Debug.Print c
             Rules.Add rule
         End If
