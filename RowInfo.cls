@@ -17,8 +17,8 @@ Public PriceL As Double
 Public PriceB As Double
 Public FX As Double
 Public Cashier As Integer
-Public WT As Double
-Public Orangic As String
+Public WT As String
+Public Organic As String
 Public Vendor As String
 Public Country As String
 Public Store As String
@@ -36,4 +36,11 @@ Public amtOpen As Double
 Public totClose As Double
 Public totBase As Double
 
-
+'
+'
+'op = Operators.Eq
+'Debug.Print op
+'1
+'If op = Operators.Add Then MsgBox ("match")
+'var1 = "StoreZZ"
+'

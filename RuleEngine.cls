@@ -45,7 +45,7 @@ Sub TestRule(row As RowInfo, rule As rule)
         
         If SkipFor Then GoTo ContinueFor
         Select Case ruleCol.Operator
-            Case "="
+            Case Operators.Eq
                 'Debug.Print ruleCol.Header & "=" & row.Columns(ruleCol.Header)
                    If row.Columns(ruleCol.Header) = "Apples" Then
                     Debug.Print "Apples"

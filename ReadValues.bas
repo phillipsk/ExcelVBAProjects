@@ -53,8 +53,11 @@ Function ReadAllRows() As Collection
             
         Next
         row_info.RowNumber = c.row
+        ' fill the row info fields with values from Columns dictionary.
+        Call PopulateRowInfoMembers(row_info)
         Rows.Add row_info
         
+        Debug.Print "row_info: " & row_info.Name
         'Debug.Print c & " - " & c.offset(0, 1)
         
     Next
@@ -94,14 +97,14 @@ Sub TestRows()
         
         Debug.Print "-----------------------------"
         
-        
-        r.Id = r.Columns("Id")
-        r.Name = r.Columns("Name")
-        r.Price = r.Columns("Price")
-        r.Cashier = r.Columns("Cashier")
-        r.Orangic = r.Columns("Orangic")
-        r.USA = r.Columns("USA")
-        r.Store = r.Columns("Store")
+'
+'        r.Id = r.Columns("Id")
+'        r.Name = r.Columns("Name")
+'        r.Price = r.Columns("Price")
+'        r.Cashier = r.Columns("Cashier")
+'        r.Orangic = r.Columns("Orangic")
+'        r.USA = r.Columns("USA")
+'        r.Store = r.Columns("Store")
         
     Next
 
@@ -139,7 +142,7 @@ Function ReadAllRules() As Collection
                 Set ruleCol = New RuleColumn
                 ruleCol.ReturnID = c.offset(0, 0 + OffsetCounter)
                 ruleCol.Header = c.offset(0, 1 + OffsetCounter)
-                ruleCol.Operator = c.offset(0, 2 + OffsetCounter)
+                ruleCol.Operator = GetOperatorValue(c.offset(0, 2 + OffsetCounter))
                 ruleCol.Value = c.offset(0, 3 + OffsetCounter)
                 ruleCol.Link = c.offset(0, 4 + OffsetCounter)
                 ruleCol.ReturnValue = c.offset(0, 5 + OffsetCounter)
@@ -161,3 +164,39 @@ Function ReadAllRules() As Collection
 End Function
 
 
+' It populates the fields of RowInfo object using Columns dictionary.
+Sub PopulateRowInfoMembers(ByRef ri As RowInfo)
+    ri.Id = ri.Columns("Id")
+    ri.Name = ri.Columns("Name")
+    ri.PriceL = ri.Columns("PriceL")
+    ri.PriceB = ri.Columns("PriceB")
+    ri.FX = ri.Columns("FX")
+    ri.Cashier = ri.Columns("Cashier")
+    ri.WT = ri.Columns("WT")
+    ri.Organic = ri.Columns("Organic")
+    ri.Vendor = ri.Columns("Vendor")
+    ri.Country = ri.Columns("Country")
+    ri.Store = ri.Columns("Store")
+End Sub
+
+'' It populates the fields of RowInfo object using Columns dictionary.
+'Function PopulateRowInfoMembers(ByVal ri As RowInfo) As RowInfo
+'    ri.Id = ri.Columns("Id")
+'    ri.Name = ri.Columns("Name")
+'    ri.PriceL = ri.Columns("PriceL")
+'    ri.PriceB = ri.Columns("PriceB")
+'    ri.FX = ri.Columns("FX")
+'    ri.Cashier = ri.Columns("Cashier")
+'    ri.WT = ri.Columns("WT")
+'    ri.Organic = ri.Columns("Organic")
+'    ri.Vendor = ri.Columns("Vendor")
+'    ri.Country = ri.Columns("Country")
+'    ri.Store = ri.Columns("Store")
+'    Set PopulateRowInfoMembers = ri
+'End Function
+Sub example_Populate()
+
+
+
+
+End Sub
