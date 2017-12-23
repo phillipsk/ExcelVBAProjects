@@ -10,17 +10,5 @@ Attribute VB_Exposed = False
 
 Public CollOps As New Collection
 
-Enum Operators
-    Eq = 1
-    Gt = 2
-    lt = 3
-    GtEq = 4
-    LtEq = 5
-    NoEQ = 6
-    Add = 7
-    Subtract = 8
-    Pos = 9
-    Neg = 10
-End Enum
 
 

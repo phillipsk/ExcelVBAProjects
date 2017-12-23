@@ -33,12 +33,12 @@ Sub Main()
         
         ws.Range("L" & row.RowNumber).Value = row.Category
         
-        Debug.Print row.Columns("Id") & "=" & row.Category
+        'Debug.Print row.Columns("Id") & "=" & row.Category
         r.Interior.ColorIndex = 0
         
         
         
-        If row.Category = "NewRuleIV" Then
+        If row.Category = "RuleIV" Then
             r.Interior.ColorIndex = 6
             Total = Total + row.Columns("PriceL")
             totalFormula = totalFormula & ws.Range("C" & row.RowNumber).Address & ","
@@ -56,7 +56,13 @@ Sub Main()
     ws.Range("C20").Value = fruitTotal
     totalFormula = Left(totalFormula, Len(totalFormula) - 1)
     totalFormula = totalFormula & ")"
-    ws.Range("C21").Value = totalFormula
+    
+    ' check if there were no matching cells for total formula
+    If totalFormula <> "=SUM)" Then
+        ws.Range("C21").Value = totalFormula
+    Else
+        ws.Range("C21").Value = ""
+    End If
 End Sub
 
 

@@ -26,6 +26,7 @@ Function ReadAllRows() As Collection
     Dim w1 As Worksheet
     Set w1 = Worksheets("Groceries")
     
+    ' data range
     Dim r As Range
     Set r = w1.Range(w1.Range("A2"), w1.Range("A2").End(xlDown))
     
@@ -57,7 +58,7 @@ Function ReadAllRows() As Collection
         Call PopulateRowInfoMembers(row_info)
         Rows.Add row_info
         
-        Debug.Print "row_info: " & row_info.Name
+        'Debug.Print "row_info: " & row_info.Name
         'Debug.Print c & " - " & c.offset(0, 1)
         
     Next
@@ -128,24 +129,28 @@ Function ReadAllRules() As Collection
     Dim ruleCol As RuleColumn
     'Debug.Print r.rows.Count
     
+    '''' 6 - x??
+    '''''' 1 or 0
     
     For Each c In r
-    Debug.Print c.Address
-    Debug.Print c.offset(0, 0)
-        If c.offset(0, 0) <> "" Then
-        If c <> "" Then Debug.Print "c is not empty"
+    'Debug.Print c.Address
+    'Debug.Print c.offset(0, 0)
+    
+        If c.offset(0, 1) <> "" Then
+        'If c <> "" Then Debug.Print "c is not empty"
             Set rule = New rule
             
             Dim OffsetCounter As Integer
             OffsetCounter = 0
-            While c.offset(0, 6 + OffsetCounter) <> ""
+            While c.offset(0, 4 + OffsetCounter) <> ""
                 Set ruleCol = New RuleColumn
-                ruleCol.ReturnID = c.offset(0, 0 + OffsetCounter)
-                ruleCol.Header = c.offset(0, 1 + OffsetCounter)
+                'ruleCol.ReturnID = c.offset(0, 0 + OffsetCounter)
+                ruleCol.Name = c.offset(0, 1 + OffsetCounter)
                 ruleCol.Operator = GetOperatorValue(c.offset(0, 2 + OffsetCounter))
+                '''Without Enum ruleCol.Operator = c.offset(0, 2 + OffsetCounter)
                 ruleCol.Value = c.offset(0, 3 + OffsetCounter)
                 ruleCol.Link = c.offset(0, 4 + OffsetCounter)
-                ruleCol.ReturnValue = c.offset(0, 5 + OffsetCounter)
+                'ruleCol.ReturnValue = c.offset(0, 5 + OffsetCounter)
                 rule.RuleColumns.Add ruleCol
                 
                 OffsetCounter = OffsetCounter + 4

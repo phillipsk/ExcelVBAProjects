@@ -40,31 +40,110 @@ Sub TestRule(row As RowInfo, rule As rule)
     Dim ruleCounter As Integer
     ruleCounter = 0
     For Each ruleCol In rule.RuleColumns
-        Debug.Print row.RowNumber
+        'Debug.Print row.RowNumber
         ruleCounter = ruleCounter + 1
         
         If SkipFor Then GoTo ContinueFor
         Select Case ruleCol.Operator
             Case Operators.Eq
-                'Debug.Print ruleCol.Header & "=" & row.Columns(ruleCol.Header)
-                   If row.Columns(ruleCol.Header) = "Apples" Then
-                    Debug.Print "Apples"
-                   End If
-                   
-                If row.Columns(ruleCol.Header) = ruleCol.Value Then
-                    
-
-                    
-                    If ruleCol.Link = "AND" Then
-                    
+                'Debug.Print ruleCol.Name & "=" & row.Columns(ruleCol.Name)
+                If IsNumeric(ruleCol.Value) Then
+                    If Val(row.Columns(ruleCol.Name)) = Val(ruleCol.Value) Then
+                        
+                        If ruleCol.Link = "AND" Then
+                        
+                        Else
+    
+                            FoundMatch = True
+                        End If
+                       
                     Else
-
-                        FoundMatch = True
+                        FoundMatch = False
+                        SkipFor = True
                     End If
-                   
                 Else
-                    FoundMatch = False
-                    SkipFor = True
+                    'If Str(row.Columns(ruleCol.Name)) = Str(ruleCol.Value) Then
+                    If row.Columns(ruleCol.Name) = ruleCol.Value Then
+                        If ruleCol.Link = "AND" Then
+                        
+                        Else
+    
+                            FoundMatch = True
+                        End If
+                       
+                    Else
+                        FoundMatch = False
+                        SkipFor = True
+                    End If
+                End If
+                
+            Case Operators.Gt
+                   
+'                If rule.RuleID = "II" Then
+'                    Debug.Print
+'                End If
+                
+                
+                If IsNumeric(ruleCol.Value) Then
+                    If Val(row.Columns(ruleCol.Name)) > Val(ruleCol.Value) Then
+                        
+                        If ruleCol.Link = "AND" Then
+                        
+                        Else
+    
+                            FoundMatch = True
+                        End If
+                       
+                    Else
+                        FoundMatch = False
+                        SkipFor = True
+                    End If
+                Else
+                    If Str(row.Columns(ruleCol.Name)) > Str(ruleCol.Value) Then
+                        
+                        If ruleCol.Link = "AND" Then
+                        
+                        Else
+    
+                            FoundMatch = True
+                        End If
+                       
+                    Else
+                        FoundMatch = False
+                        SkipFor = True
+                    End If
+                End If
+                            
+
+            Case Operators.Lt
+                If IsNumeric(ruleCol.Value) Then
+                    If Val(row.Columns(ruleCol.Name)) < Val(ruleCol.Value) Then
+                        
+                        If ruleCol.Link = "AND" Then
+                        
+                        Else
+    
+                            FoundMatch = True
+                        End If
+                       
+                    Else
+                        FoundMatch = False
+                        SkipFor = True
+                    End If
+                Else
+                    If Str(row.Columns(ruleCol.Name)) < Str(ruleCol.Value) Then
+                        
+                        If ruleCol.Link = "AND" Then
+                        
+                        Else
+    
+                            FoundMatch = True
+                        End If
+                       
+                    Else
+                        FoundMatch = False
+                        SkipFor = True
+                    End If
                 End If
         
         End Select
