@@ -3,6 +3,17 @@ Option Explicit
 
 Sub Main()
 
+'Tasks
+'======
+'
+'1. Complete Rule Engine <-
+'2. Find edge cases where it is not working.
+'3. Make Data and Rules worksheets dynamic
+'
+'4. Grouping using brackets (a = b or b = c) and b = d (Operator Prescedence)
+'
+'5*. If (Rule1  OR Rule2) = Rule8
+
     
     ' Read values from worksheet and rules + apply rules
     
@@ -31,7 +42,10 @@ Sub Main()
     For Each row In engine.Rows
         Set r = ws.Range("A" & row.RowNumber)
         
-        ws.Range("L" & row.RowNumber).Value = row.Category
+        'COLUMN WHERE CATEGORY IS PRINTED
+        
+        ws.Range("M" & row.RowNumber).ClearContents
+        ws.Range("M" & row.RowNumber).Value = row.Category
         
         'Debug.Print row.Columns("Id") & "=" & row.Category
         r.Interior.ColorIndex = 0

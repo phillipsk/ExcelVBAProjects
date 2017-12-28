@@ -13,3 +13,6 @@ Public Category As String
 Public RuleID As String
 
 Public Total As String
+
+'Evaluating Row upon Rule set if Row is True
+Public Success As Boolean

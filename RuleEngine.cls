@@ -25,6 +25,11 @@ Public Sub Apply()
             TestRule row, rule ' takes 1 row and apply 1 rule to it
         Next
         
+'        For Each rule In Rules
+'            TestRule row, rule, category
+'        Next
+        
+        
     Next
     
 End Sub
@@ -50,10 +55,7 @@ Sub TestRule(row As RowInfo, rule As rule)
                 If IsNumeric(ruleCol.Value) Then
                     If Val(row.Columns(ruleCol.Name)) = Val(ruleCol.Value) Then
                         
-                        If ruleCol.Link = "AND" Then
-                        
-                        Else
-    
+                        If ruleCol.Link <> "AND" Then
                             FoundMatch = True
                         End If
                        
@@ -64,10 +66,7 @@ Sub TestRule(row As RowInfo, rule As rule)
                 Else
                     'If Str(row.Columns(ruleCol.Name)) = Str(ruleCol.Value) Then
                     If row.Columns(ruleCol.Name) = ruleCol.Value Then
-                        If ruleCol.Link = "AND" Then
-                        
-                        Else
-    
+                        If ruleCol.Link <> "AND" Then
                             FoundMatch = True
                         End If
                        
@@ -86,7 +85,7 @@ Sub TestRule(row As RowInfo, rule As rule)
                 
                 If IsNumeric(ruleCol.Value) Then
                     If Val(row.Columns(ruleCol.Name)) > Val(ruleCol.Value) Then
-                        
+
                         If ruleCol.Link = "AND" Then
                         
                         Else

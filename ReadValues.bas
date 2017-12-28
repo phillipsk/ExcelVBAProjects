@@ -55,7 +55,7 @@ Function ReadAllRows() As Collection
         Next
         row_info.RowNumber = c.row
         ' fill the row info fields with values from Columns dictionary.
-        Call PopulateRowInfoMembers(row_info)
+        'Call PopulateRowInfoMembers(row_info)
         Rows.Add row_info
         
         'Debug.Print "row_info: " & row_info.Name
