@@ -2,13 +2,13 @@ Attribute VB_Name = "Utility"
 
 ' example: converts "=" to Operators.Eq
 Function GetOperatorValue(op As String) As Operators
-    Select Case op
+    Select Case UCase(op)
         Case "="
             GetOperatorValue = Eq
         Case ">"
             GetOperatorValue = Gt
         Case "<"
-            GetOperatorValue = lt
+            GetOperatorValue = Lt
         Case ">="
             GetOperatorValue = GtEq
         Case "<="
@@ -23,6 +23,10 @@ Function GetOperatorValue(op As String) As Operators
             GetOperatorValue = Pos
         Case "--"
             GetOperatorValue = Neg
+        Case "AND"
+            GetOperatorValue = [And]
+        Case "OR"
+            GetOperatorValue = [Or]
     End Select
 End Function
 
@@ -187,5 +191,10 @@ Public Function FormatRoman(ByVal n As Integer) As String
    If n < 0 Then s = "-" & s        ' insert sign if negative (non-standard)
    FormatRoman = s
    End Function
+
+
+Function IsRule(columnName As String) As Boolean
+    IsRule = UCase(Left(columnName, 4)) = "RULE"
+End Function
 
 

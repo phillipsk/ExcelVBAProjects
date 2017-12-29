@@ -11,6 +11,8 @@ Enum Operators
     Subtract = 8
     Pos = 9
     Neg = 10
+    [And] = 11
+    [Or] = 12
 End Enum
 
 

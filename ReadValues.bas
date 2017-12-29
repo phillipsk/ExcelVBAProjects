@@ -3,7 +3,7 @@ Option Explicit
 
 Sub ReadValues()
 
-
+'''Test function ONLY Prints
     Dim r As Range
     Set r = Range(Range("A2"), Range("A2").End(xlDown))
     
@@ -17,14 +17,14 @@ Sub ReadValues()
 End Sub
 
 
-Function ReadAllRows() As Collection
+Function ReadAllRows(worksheetName As String) As Collection
 
     Dim Rows As New Collection
     
     
     ' Worksheets("Sheet1").range("Id")
     Dim w1 As Worksheet
-    Set w1 = Worksheets("Groceries")
+    Set w1 = Worksheets(worksheetName)
     
     ' data range
     Dim r As Range
@@ -113,12 +113,12 @@ End Sub
 
 
 
-Function ReadAllRules() As Collection
-    Dim Rules As New Collection
+Function ReadAllRules(worksheetName As String) As Collection
+    Dim rules As New Collection
     
     ' read rules from Rules worksheet
     Dim wr As Worksheet
-    Set wr = Worksheets("Rules")
+    Set wr = Worksheets(worksheetName)
     
     Dim r As Range
     ' FIXIT: Fix when there is only one rule. At the moment it selects all rows.
@@ -161,11 +161,11 @@ Function ReadAllRules() As Collection
             rule.RuleID = c.End(xlToLeft)
             rule.Category = rule.Category + rule.RuleID
             'Debug.Print c
-            Rules.Add rule
+            rules.Add rule
         End If
     Next
     
-    Set ReadAllRules = Rules
+    Set ReadAllRules = rules
 End Function
 
 

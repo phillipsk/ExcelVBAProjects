@@ -7,7 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-Public Rules As New Collection
+Public rules As New Collection
 Public Rows As New Collection
 
 
@@ -21,12 +21,13 @@ Public Sub Apply()
     For Each row In Rows ' goes through all rows
         
         ' Test all rules against selected row
-        For Each rule In Rules
+        Call ResetRules
+        For Each rule In rules
             TestRule row, rule ' takes 1 row and apply 1 rule to it
         Next
         
 '        For Each rule In Rules
-'            TestRule row, rule, category
+'            TestRule row, rule, Category
 '        Next
         
         
@@ -40,6 +41,8 @@ Sub TestRule(row As RowInfo, rule As rule)
     Dim FoundMatch As Boolean
     FoundMatch = False
     Dim SkipFor As Boolean
+    Dim rule1value As Boolean
+    Dim rule2value As Boolean
     
     'Debug.Print row.Columns("Name")
     Dim ruleCounter As Integer
@@ -47,6 +50,8 @@ Sub TestRule(row As RowInfo, rule As rule)
     For Each ruleCol In rule.RuleColumns
         'Debug.Print row.RowNumber
         ruleCounter = ruleCounter + 1
+        rule1value = False
+        rule2value = False
         
         If SkipFor Then GoTo ContinueFor
         Select Case ruleCol.Operator
@@ -145,11 +150,29 @@ Sub TestRule(row As RowInfo, rule As rule)
                     End If
                 End If
         
+            Case Operators.And
+                ' Get Success value of given rule
+                ' E.g. RuleI = True And RuleII = False
+                
+                rule1value = IsRuleSuccess(ruleCol.Name)
+                rule2value = IsRuleSuccess(ruleCol.Value)
+                
+                FoundMatch = rule1value And rule2value
+            Case Operators.Or
+                
+                rule1value = IsRuleSuccess(ruleCol.Name)
+                rule2value = IsRuleSuccess(ruleCol.Value)
+                
+                FoundMatch = rule1value Or rule2value
+        
         End Select
         
         If FoundMatch Then
             'Debug.Print "Match!"
             row.Category = rule.Category
+            
+            ' Update Rule
+            rule.Success = True
         Else
             'row.Category = ""
         End If
@@ -158,5 +181,24 @@ ContinueFor:
     Next
     
 
+End Sub
+Function IsRuleSuccess(ruleName As String) As Boolean
+
+    Dim r As rule
+    Dim result As Boolean
+    For Each r In rules
+        If ruleName = "Rule" & r.RuleID Then
+            result = r.Success
+        End If
+    Next
+    IsRuleSuccess = result
+    
+End Function
+
+Sub ResetRules()
+    Dim r As rule
+    For Each r In rules
+        r.Success = False
+    Next
 End Sub
 

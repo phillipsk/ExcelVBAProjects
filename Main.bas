@@ -14,19 +14,37 @@ Sub Main()
 '
 '5*. If (Rule1  OR Rule2) = Rule8
 
+'TODO
+'=====
+'
+'1. [x] Get existing rule results (added 2 new functions to RuleEngine class)
+'2. [x] AND/OR operators
+'3. [x] Make Data and Rules worksheets dynamic
+'4. [x] Clear category column before applying rules
+'5. [ ] Finish remaining operators like <>
+'6. [ ] Pass Workbook name dynamically
+'
+'
+'Additional ideas
+'=================
+'
+'1. Add arithmetic operators like +/-
+'2. Try Macro record to general basic macros
+
     
     ' Read values from worksheet and rules + apply rules
     
     Dim row As RowInfo
     Dim engine As New RuleEngine
-    Set engine.Rows = ReadAllRows()
-    Set engine.Rules = ReadAllRules()
+    Set engine.Rows = ReadAllRows("Groceries")
+    Set engine.rules = ReadAllRules("Rules")
     Call engine.Apply
     
 
     
     
     ' Updating worksheet based on results
+
     
     Dim ws As Worksheet
     Set ws = Worksheets("Groceries")
