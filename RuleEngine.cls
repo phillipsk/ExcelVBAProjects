@@ -13,24 +13,14 @@ Public Rows As New Collection
 
 Public Sub Apply()
 
-
-
     Dim row As RowInfo
     Dim rule As rule
-    
     For Each row In Rows ' goes through all rows
-        
         ' Test all rules against selected row
         Call ResetRules
         For Each rule In rules
             TestRule row, rule ' takes 1 row and apply 1 rule to it
         Next
-        
-'        For Each rule In Rules
-'            TestRule row, rule, Category
-'        Next
-        
-        
     Next
     
 End Sub
@@ -38,8 +28,9 @@ End Sub
 
 Sub TestRule(row As RowInfo, rule As rule)
     Dim ruleCol As RuleColumn
-    Dim FoundMatch As Boolean
-    FoundMatch = False
+    Dim FoundMatch As Boolean: FoundMatch = False ' match in overall rule
+    Dim NewMatch As Boolean: NewMatch = False ' match in current rule column
+    Dim Link As String: Link = "" ' Link with next condition in the rule
     Dim SkipFor As Boolean
     Dim rule1value As Boolean
     Dim rule2value As Boolean
@@ -53,130 +44,71 @@ Sub TestRule(row As RowInfo, rule As rule)
         rule1value = False
         rule2value = False
         
+        Dim strRowVal As String
+        Dim numRowVal As Double
+        Dim strRuleVal As String
+        Dim numRuleVal As Double
+        Dim IsNum As Boolean
+        If IsNumeric(ruleCol.Value) Then
+            numRowVal = Val(row.Columns(ruleCol.Name))
+            numRuleVal = Val(ruleCol.Value)
+            IsNum = True
+        Else
+            strRowVal = row.Columns(ruleCol.Name)
+            strRuleVal = ruleCol.Value
+            IsNum = False
+        End If
+        
         If SkipFor Then GoTo ContinueFor
         Select Case ruleCol.Operator
             Case Operators.Eq
-                'Debug.Print ruleCol.Name & "=" & row.Columns(ruleCol.Name)
-                If IsNumeric(ruleCol.Value) Then
-                    If Val(row.Columns(ruleCol.Name)) = Val(ruleCol.Value) Then
-                        
-                        If ruleCol.Link <> "AND" Then
-                            FoundMatch = True
-                        End If
-                       
-                    Else
-                        FoundMatch = False
-                        SkipFor = True
-                    End If
-                Else
-                    'If Str(row.Columns(ruleCol.Name)) = Str(ruleCol.Value) Then
-                    If row.Columns(ruleCol.Name) = ruleCol.Value Then
-                        If ruleCol.Link <> "AND" Then
-                            FoundMatch = True
-                        End If
-                       
-                    Else
-                        FoundMatch = False
-                        SkipFor = True
-                    End If
-                End If
-                
+                If IsNum Then NewMatch = (numRowVal = numRuleVal) Else NewMatch = (strRowVal = strRuleVal)
             Case Operators.Gt
-                   
-'                If rule.RuleID = "II" Then
-'                    Debug.Print
-'                End If
-                
-                
-                If IsNumeric(ruleCol.Value) Then
-                    If Val(row.Columns(ruleCol.Name)) > Val(ruleCol.Value) Then
-
-                        If ruleCol.Link = "AND" Then
-                        
-                        Else
-    
-                            FoundMatch = True
-                        End If
-                       
-                    Else
-                        FoundMatch = False
-                        SkipFor = True
-                    End If
-                Else
-                    If Str(row.Columns(ruleCol.Name)) > Str(ruleCol.Value) Then
-                        
-                        If ruleCol.Link = "AND" Then
-                        
-                        Else
-    
-                            FoundMatch = True
-                        End If
-                       
-                    Else
-                        FoundMatch = False
-                        SkipFor = True
-                    End If
-                End If
-                            
-
+                If IsNum Then NewMatch = (numRowVal > numRuleVal) Else NewMatch = (strRowVal > strRuleVal)
             Case Operators.Lt
-                If IsNumeric(ruleCol.Value) Then
-                    If Val(row.Columns(ruleCol.Name)) < Val(ruleCol.Value) Then
-                        
-                        If ruleCol.Link = "AND" Then
-                        
-                        Else
-    
-                            FoundMatch = True
-                        End If
-                       
-                    Else
-                        FoundMatch = False
-                        SkipFor = True
-                    End If
-                Else
-                    If Str(row.Columns(ruleCol.Name)) < Str(ruleCol.Value) Then
-                        
-                        If ruleCol.Link = "AND" Then
-                        
-                        Else
-    
-                            FoundMatch = True
-                        End If
-                       
-                    Else
-                        FoundMatch = False
-                        SkipFor = True
-                    End If
-                End If
-        
+                If IsNum Then NewMatch = (numRowVal < numRuleVal) Else NewMatch = (strRowVal < strRuleVal)
+            Case Operators.NoEQ
+                If IsNum Then NewMatch = (numRowVal <> numRuleVal) Else NewMatch = (strRowVal <> strRuleVal)
+            Case Operators.GtEq
+                If IsNum Then NewMatch = (numRowVal >= numRuleVal) Else NewMatch = (strRowVal >= strRuleVal)
+            Case Operators.LtEq
+                If IsNum Then NewMatch = (numRowVal <= numRuleVal) Else NewMatch = (strRowVal <= strRuleVal)
             Case Operators.And
                 ' Get Success value of given rule
                 ' E.g. RuleI = True And RuleII = False
                 
                 rule1value = IsRuleSuccess(ruleCol.Name)
                 rule2value = IsRuleSuccess(ruleCol.Value)
+                NewMatch = rule1value And rule2value
                 
-                FoundMatch = rule1value And rule2value
             Case Operators.Or
                 
                 rule1value = IsRuleSuccess(ruleCol.Name)
                 rule2value = IsRuleSuccess(ruleCol.Value)
-                
-                FoundMatch = rule1value Or rule2value
+                NewMatch = rule1value Or rule2value
         
         End Select
         
-        If FoundMatch Then
-            'Debug.Print "Match!"
-            row.Category = rule.Category
-            
-            ' Update Rule
-            rule.Success = True
+        ' Evaluate results
+        If Link = "AND" Then
+            If FoundMatch And NewMatch Then
+                row.Category = rule.Category
+                rule.Success = True
+            End If
+        ElseIf Link = "OR" Then
+            If FoundMatch Or NewMatch Then
+                row.Category = rule.Category
+                rule.Success = True
+            End If
         Else
-            'row.Category = ""
+            If NewMatch Then
+                row.Category = rule.Category
+                rule.Success = True
+            End If
         End If
         
+        FoundMatch = NewMatch
+        Link = ruleCol.Link ' Link for next rule column in for loop.
 ContinueFor:
     Next
     
@@ -189,6 +121,9 @@ Function IsRuleSuccess(ruleName As String) As Boolean
     For Each r In rules
         If ruleName = "Rule" & r.RuleID Then
             result = r.Success
+            If result Then
+                Debug.Print result
+            End If
         End If
     Next
     IsRuleSuccess = result

@@ -8,7 +8,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 
-Public Header As String
+Public Name As String
 'Public Operator As String
 Public Operator As Operators
 Public Value As String
@@ -16,11 +16,8 @@ Public Value As String
 Public Link As String
 Public ReturnValue As String
 Public ReturnID As String
+Public PrintAble As Boolean
 
 
-Enum ColumnType
-    [String] = 1
-    [Integer] = 2
-    [Double] = 3
-End Enum
+
 
