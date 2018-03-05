@@ -56,9 +56,19 @@ Sub Main()
     ' Update category column in Groceries worksheet.
     UpdateCategory engine
     
-    UpdateSummary engine
+    'UpdateSummary engine
+    Dim updater As New summaryUpdater
+    Dim updaterColorful As New SummaryUpdaterColorful
+    Dim updaterAdd As New SummaryUpdaterAdd
+    Dim updaterSubtract As New SummaryUpdaterSubtract
     
-    ' MsgBox (GetTotal(New totalProvider, engine))
+    
+    UpdateSummary updaterAdd, engine, Worksheets("Summary")
+    UpdateSummary updaterSubtract, engine, Worksheets("SummarySubtract")
+    'Or pass a variable
+    'UpdateSummary updaterColorful, engine, Worksheets("Summary")
+    
+    'MsgBox (GetTotal(New totalProvider, engine))
 
 End Sub
 
@@ -72,11 +82,15 @@ Private Sub UpdateCategory(engine As RuleEngine)
     Dim r As Range
     Dim Total As Double: Total = 0
 
+    Dim colLetter As String
+    
+    colLetter = Col_Letter(ws.Range("A1").End(xlToRight).Column)
     For Each row In engine.Rows
         Set r = ws.Range("A" & row.RowNumber)
         'COLUMN WHERE CATEGORY IS PRINTED
-        ws.Range("M" & row.RowNumber).ClearContents
-        ws.Range("M" & row.RowNumber).Value = row.Category
+        
+        ws.Range(colLetter & row.RowNumber).ClearContents
+        ws.Range(colLetter & row.RowNumber).Value = row.Category
         
         'Debug.Print row.Columns("Id") & "=" & row.Category
         r.Interior.ColorIndex = 0
@@ -84,42 +98,35 @@ Private Sub UpdateCategory(engine As RuleEngine)
     Next
 End Sub
 
-Private Sub UpdateSummary(engine As RuleEngine)
-    Dim row As RowInfo
-    Dim pRule As rule
-    Dim offset As Integer
-    Dim colHeaders As New Collection
-    colHeaders.Add ("PriceL")
-    colHeaders.Add ("PriceB")
-    
-    Dim colHeader1 As String
-    Dim colHeader2 As String
-    Dim colHeader3 As String
-    Dim colHeader4 As String
-    
-    colHeader1 = Worksheets("Summary").Range("B1").Value
-    colHeader2 = Worksheets("Summary").Range("C1").Value
-    ' go through all available rules
-    For Each pRule In engine.rules
-        Worksheets("Summary").Range("A2").offset(offset, 0) = pRule.Category
-        
-        ' Get total for each rule
-        Dim pTotal1 As Double: pTotal1 = 0
-        Dim pTotal2 As Double: pTotal2 = 0
-        For Each row In engine.Rows
-            If row.Category = pRule.Category Then
-                pTotal1 = pTotal1 + row.Columns(colHeader1)
-                pTotal2 = pTotal2 + row.Columns(colHeader2)
-            End If
-        Next
-        Worksheets("Summary").Range("B2").offset(offset, 0) = pTotal1
-        Worksheets("Summary").Range("C2").offset(offset, 0) = pTotal2
-        
-        offset = offset + 1
-    Next
-End Sub
+Function Col_Letter(lngCol As Long) As String
+    Dim vArr
+    vArr = Split(Cells(1, lngCol).Address(True, False), "$")
+    Col_Letter = vArr(0)
+End Function
 
 'Private Function GetTotal(totalProvider As totalProvider, engine As RuleEngine) As Double
 '    GetTotal = totalProvider.GetTotal(engine)
 'End Function
+
+'Sub Test()
+'
+'    Dim cat As New cat
+'    Dim dog As New dog
+'
+'    AnimalSpeak cat
+'    AnimalSpeak dog
+'
+'End Sub
+'
+'Sub AnimalSpeak(a As IAnimal)
+'    a.Speak
+'End Sub
+
+Sub UpdateSummary(summaryUpdater As ISummaryUpdater, engine As RuleEngine, sheet As Worksheet)
+    summaryUpdater.ClearSheet sheet
+    summaryUpdater.Update engine, sheet
+    summaryUpdater.FitAllColumns sheet
+    'Debug.Print summaryUpdater.GetVersion()
+End Sub
+
 

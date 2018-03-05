@@ -122,7 +122,7 @@ Function IsRuleSuccess(ruleName As String) As Boolean
         If ruleName = "Rule" & r.RuleID Then
             result = r.Success
             If result Then
-                Debug.Print result
+                'Debug.Print result
             End If
         End If
     Next
